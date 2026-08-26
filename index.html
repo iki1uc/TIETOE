@@ -190,6 +190,8 @@ body {
   font-size: 8px;
   color: #445555;
   border: 1px solid rgba(255,255,255,0.01);
+  flex-wrap: wrap;
+  gap: 4px;
 }
 .footer {
   text-align: center;
@@ -258,7 +260,7 @@ body {
 
 <script>
 // ============================================================
-// SHUFFLE · DREH · 2 SPIELER · 9 TASTEN
+// SHUFFLE · DREH · 2 SPIELER · 9 TASTEN – KORRIGIERT
 // ============================================================
 
 const canvas = document.getElementById('tanzCanvas');
@@ -279,86 +281,85 @@ function resizeCanvas() {
 }
 window.addEventListener('resize', resizeCanvas);
 
-// ===== POSEN =====
+// ===== POSEN – KORRIGIERT & ERWEITERT =====
 const POSES = {
-  '1': { armL: -40, armR: -30, legL: -20, legR: -10, body: 0, head: 0, label: 'Step L' },
-  '2': { armL: -30, armR: -40, legL: -10, legR: -20, body: 2, head: 2, label: 'Step R' },
-  '3': { armL: -50, armR: 20, legL: -30, legR: 10, body: 4, head: 4, label: 'Arm L' },
-  '4': { armL: 20, armR: -50, legL: 10, legR: -30, body: 6, head: 6, label: 'Arm R' },
-  '5': { armL: 40, armR: 40, legL: 0, legR: 0, body: 8, head: 8, label: 'Jump' },
-  '6': { armL: -60, armR: 60, legL: -20, legR: 20, body: 10, head: 10, label: 'Spread' },
-  '7': { armL: 0, armR: 0, legL: -40, legR: 40, body: 12, head: 12, label: 'Split' },
-  '8': { armL: 30, armR: -30, legL: -20, legR: -20, body: 14, head: 14, label: 'Twist' },
-  '9': { armL: -20, armR: 20, legL: 20, legR: -20, body: 16, head: 16, label: 'Spin' },
-  'q': { armL: -35, armR: -35, legL: -15, legR: -15, body: 1, head: 1, label: 'Sway L' },
-  'w': { armL: 35, armR: 35, legL: 15, legR: 15, body: 3, head: 3, label: 'Sway R' },
-  'e': { armL: -45, armR: 10, legL: -25, legR: 5, body: 5, head: 5, label: 'Wave L' },
-  'a': { armL: 10, armR: -45, legL: 5, legR: -25, body: 7, head: 7, label: 'Wave R' },
-  'z': { armL: 50, armR: -20, legL: 10, legR: -10, body: 9, head: 9, label: 'Power' },
-  'd': { armL: -20, armR: 50, legL: -10, legR: 10, body: 11, head: 11, label: 'Grace' },
-  'y': { armL: 20, armR: 20, legL: -30, legR: 30, body: 13, head: 13, label: 'Float' },
-  'x': { armL: -40, armR: -40, legL: 30, legR: -30, body: 15, head: 15, label: 'Cross' },
-  'c': { armL: 0, armR: 0, legL: 0, legR: 0, body: 17, head: 17, label: 'Center' }
+  '1': { armL: -0.6, armR: -0.4, legL: -0.3, legR: -0.1, body: 0, head: 0, label: 'Step L' },
+  '2': { armL: -0.4, armR: -0.6, legL: -0.1, legR: -0.3, body: 0.05, head: 0.05, label: 'Step R' },
+  '3': { armL: -0.8, armR: 0.3, legL: -0.4, legR: 0.1, body: 0.1, head: 0.1, label: 'Arm L' },
+  '4': { armL: 0.3, armR: -0.8, legL: 0.1, legR: -0.4, body: 0.15, head: 0.15, label: 'Arm R' },
+  '5': { armL: 0.6, armR: 0.6, legL: 0, legR: 0, body: 0.2, head: 0.2, label: 'Jump' },
+  '6': { armL: -0.9, armR: 0.9, legL: -0.3, legR: 0.3, body: 0.25, head: 0.25, label: 'Spread' },
+  '7': { armL: 0, armR: 0, legL: -0.6, legR: 0.6, body: 0.3, head: 0.3, label: 'Split' },
+  '8': { armL: 0.5, armR: -0.5, legL: -0.3, legR: -0.3, body: 0.35, head: 0.35, label: 'Twist' },
+  '9': { armL: -0.3, armR: 0.3, legL: 0.3, legR: -0.3, body: 0.4, head: 0.4, label: 'Spin' },
+  'q': { armL: -0.5, armR: -0.5, legL: -0.2, legR: -0.2, body: 0.02, head: 0.02, label: 'Sway L' },
+  'w': { armL: 0.5, armR: 0.5, legL: 0.2, legR: 0.2, body: 0.08, head: 0.08, label: 'Sway R' },
+  'e': { armL: -0.7, armR: 0.15, legL: -0.35, legR: 0.05, body: 0.12, head: 0.12, label: 'Wave L' },
+  'a': { armL: 0.15, armR: -0.7, legL: 0.05, legR: -0.35, body: 0.18, head: 0.18, label: 'Wave R' },
+  'z': { armL: 0.7, armR: -0.3, legL: 0.15, legR: -0.15, body: 0.22, head: 0.22, label: 'Power' },
+  'd': { armL: -0.3, armR: 0.7, legL: -0.15, legR: 0.15, body: 0.28, head: 0.28, label: 'Grace' },
+  'y': { armL: 0.3, armR: 0.3, legL: -0.4, legR: 0.4, body: 0.32, head: 0.32, label: 'Float' },
+  'x': { armL: -0.6, armR: -0.6, legL: 0.4, legR: -0.4, body: 0.38, head: 0.38, label: 'Cross' },
+  'c': { armL: 0, armR: 0, legL: 0, legR: 0, body: 0, head: 0, label: 'Center' }
 };
 
-// ===== TANZER =====
+// ===== TÄNZER =====
 let p1 = { x: 0.28, y: 0.55, pose: '5', color: '#ff4444', label: 'P1', rot: 0 };
 let p2 = { x: 0.72, y: 0.55, pose: 'c', color: '#00ccff', label: 'P2', rot: 0 };
 
-// ===== DRAW =====
+// ===== DRAW STICKMAN – KORRIGIERT =====
 function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot) {
-  const s = scale * 1.8; // Doppelt so groß!
   const p = POSES[pose] || POSES['5'];
-  const tilt = p.body * 0.008;
+  const s = scale * 1.8;
 
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(rot + tilt);
+  ctx.rotate(rot + p.body * 0.2);
   ctx.globalAlpha = alpha || 1;
 
-  // Schatten-Glow
+  // Glow
   ctx.shadowColor = color + '55';
-  ctx.shadowBlur = 30;
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 4.5;
+  ctx.shadowBlur = 25;
 
   // Kopf
-  ctx.shadowBlur = 20;
+  ctx.shadowBlur = 15;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.arc(0, -s * 1.2 + p.head * 0.02 * s, s * 0.22, 0, Math.PI * 2);
+  ctx.arc(0, -s * 1.1 + p.head * 0.3 * s, s * 0.2, 0, Math.PI * 2);
   ctx.stroke();
 
   // Körper
-  ctx.shadowBlur = 12;
+  ctx.shadowBlur = 10;
   ctx.lineWidth = 5;
   ctx.beginPath();
-  ctx.moveTo(0, -s * 0.9 + p.body * 0.015 * s);
-  ctx.lineTo(0, s * 0.2 + p.body * 0.015 * s);
+  ctx.moveTo(0, -s * 0.85 + p.body * 0.3 * s);
+  ctx.lineTo(0, s * 0.25 + p.body * 0.3 * s);
   ctx.stroke();
 
   // Arme
   ctx.lineWidth = 4.5;
   ctx.beginPath();
-  ctx.moveTo(0, -s * 0.7 + p.body * 0.015 * s);
-  ctx.lineTo(-s * 0.5 + p.armL * 0.008 * s, -s * 0.2 + p.body * 0.015 * s);
+  ctx.moveTo(0, -s * 0.65 + p.body * 0.3 * s);
+  ctx.lineTo(-s * 0.45 + p.armL * 0.5 * s, -s * 0.15 + p.body * 0.3 * s);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(0, -s * 0.7 + p.body * 0.015 * s);
-  ctx.lineTo(s * 0.5 + p.armR * 0.008 * s, -s * 0.2 + p.body * 0.015 * s);
+  ctx.moveTo(0, -s * 0.65 + p.body * 0.3 * s);
+  ctx.lineTo(s * 0.45 + p.armR * 0.5 * s, -s * 0.15 + p.body * 0.3 * s);
   ctx.stroke();
 
   // Beine
   ctx.lineWidth = 5;
   ctx.beginPath();
-  ctx.moveTo(0, s * 0.2 + p.body * 0.015 * s);
-  ctx.lineTo(-s * 0.3 + p.legL * 0.01 * s, s * 0.7 + p.legL * 0.01 * s);
+  ctx.moveTo(0, s * 0.25 + p.body * 0.3 * s);
+  ctx.lineTo(-s * 0.3 + p.legL * 0.6 * s, s * 0.7 + p.legL * 0.6 * s);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(0, s * 0.2 + p.body * 0.015 * s);
-  ctx.lineTo(s * 0.3 + p.legR * 0.01 * s, s * 0.7 + p.legR * 0.01 * s);
+  ctx.moveTo(0, s * 0.25 + p.body * 0.3 * s);
+  ctx.lineTo(s * 0.3 + p.legR * 0.6 * s, s * 0.7 + p.legR * 0.6 * s);
   ctx.stroke();
 
-  // Name
+  // Label
   ctx.shadowBlur = 0;
   ctx.globalAlpha = 0.6;
   ctx.fillStyle = color;
@@ -367,8 +368,13 @@ function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot) {
   ctx.textBaseline = 'bottom';
   ctx.fillText(label, 0, -s * 1.5);
 
+  // Pose-Name
+  ctx.globalAlpha = 0.3;
+  ctx.font = '7px monospace';
+  ctx.textBaseline = 'top';
+  ctx.fillText(p.label || pose, 0, s * 1.0);
+
   ctx.restore();
-  ctx.globalAlpha = 1;
 }
 
 // ===== RENDER =====
@@ -423,7 +429,7 @@ function render() {
   ctx.textAlign = 'right';
   ctx.fillText(`🔵 ${p2Score}`, w - 12, 10);
 
-  // Dreh-Status
+  // Dreh
   ctx.fillStyle = '#445555';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
@@ -443,9 +449,9 @@ function render() {
   ctx.ellipse(p2x, h * 0.82, scale * 0.45, scale * 0.12, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Männchen zeichnen
-  drawStickman(ctx, p1x, p1y, p1.pose, p1.color, 'P1', scale, 1, p1.rot + spinAngle);
-  drawStickman(ctx, p2x, p2y, p2.pose, p2.color, 'P2', scale, 1, p2.rot + spinAngle);
+  // Tänzer zeichnen
+  drawStickman(ctx, p1x, p1y, p1.pose, p1.color, 'P1', scale, 1, p1.rot + spinAngle * 0.02);
+  drawStickman(ctx, p2x, p2y, p2.pose, p2.color, 'P2', scale, 1, p2.rot + spinAngle * 0.02);
 
   // Verbindung
   ctx.shadowBlur = 0;
@@ -458,7 +464,6 @@ function render() {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Shuffle-Badge
   if (shuffleMode) {
     ctx.fillStyle = '#ffaa0044';
     ctx.font = '10px monospace';
@@ -468,7 +473,7 @@ function render() {
   }
 }
 
-// ===== UPDATE =====
+// ===== UPDATE – KORRIGIERT =====
 function update() {
   if (!running) return;
   time += 16;
@@ -483,36 +488,36 @@ function update() {
     document.getElementById('moveStatus').textContent = currentMove;
   }
 
-  // Spieler 1
-  if (frame % 12 === 0) {
+  // Spieler 1 – automatische Bewegung
+  if (frame % 8 === 0) {
     const keys = shuffleMode ? ['5','6','7','8','9','1','2','3','4'] : ['1','2','3','4','5','6','7','8','9'];
     const key = keys[Math.floor(Math.random() * keys.length)];
     p1.pose = key;
-    if (p1.pose === currentMove || Math.random() < 0.25) p1Score++;
+    if (p1.pose === currentMove || Math.random() < 0.15) p1Score++;
     document.getElementById('p1Score').textContent = p1Score;
+    // Tastatur-Highlight
     document.querySelectorAll('.key-btn.p1').forEach(b => {
       b.classList.toggle('active-p1', b.dataset.key === key);
     });
-    // Dreh-Shuffle
-    if (shuffleMode) p1.rot += (Math.random() - 0.5) * 0.2;
+    if (shuffleMode) p1.rot += (Math.random() - 0.5) * 0.05;
   }
 
-  // Spieler 2
-  if (frame % 12 === 0) {
+  // Spieler 2 – automatische Bewegung
+  if (frame % 8 === 0) {
     const keys = shuffleMode ? ['y','x','c','q','w','e','a','z','d'] : ['q','w','e','a','z','d','y','x','c'];
     const key = keys[Math.floor(Math.random() * keys.length)];
     p2.pose = key;
-    if (p2.pose === currentMove || Math.random() < 0.25) p2Score++;
+    if (p2.pose === currentMove || Math.random() < 0.15) p2Score++;
     document.getElementById('p2Score').textContent = p2Score;
     document.querySelectorAll('.key-btn.p2').forEach(b => {
       b.classList.toggle('active-p2', b.dataset.key === key);
     });
-    if (shuffleMode) p2.rot += (Math.random() - 0.5) * 0.2;
+    if (shuffleMode) p2.rot += (Math.random() - 0.5) * 0.05;
   }
 
-  // Dreh-Update
+  // Dreh
   if (spinSpeed !== 0) {
-    spinAngle += spinSpeed;
+    spinAngle += spinSpeed * 8;
     document.getElementById('spinStatus').textContent = `${Math.round(spinAngle)}°`;
   }
 
@@ -520,36 +525,40 @@ function update() {
   const status = p1Score > p2Score ? '🔴 P1 führt' : p2Score > p1Score ? '🔵 P2 führt' : '⚖️ Gleichstand';
   document.getElementById('statusText').textContent = status;
 
-  // Zeit
-  const seconds = Math.floor(time / 1000);
-  const minutes = Math.floor(seconds / 60);
-  document.getElementById('timeStatus').textContent =
-    `${String(minutes).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
-
   render();
   requestAnimationFrame(update);
 }
 
-// ===== TASTEN =====
+// ===== TASTATUR – KORRIGIERT =====
 document.addEventListener('keydown', (e) => {
   const key = e.key.toLowerCase();
+
+  // Spieler 1: 1-9
   if (key >= '1' && key <= '9') {
+    e.preventDefault();
     p1.pose = key;
     document.querySelectorAll('.key-btn.p1').forEach(b => {
       b.classList.toggle('active-p1', b.dataset.key === key);
     });
-    if (key === currentMove || Math.random() < 0.2) p1Score++;
-    document.getElementById('p1Score').textContent = p1Score;
+    if (key === currentMove || Math.random() < 0.2) {
+      p1Score++;
+      document.getElementById('p1Score').textContent = p1Score;
+    }
     if (shuffleMode) p1.rot += 0.1;
     return;
   }
+
+  // Spieler 2: q,w,e,a,z,d,y,x,c
   if (['q','w','e','a','z','d','y','x','c'].includes(key)) {
+    e.preventDefault();
     p2.pose = key;
     document.querySelectorAll('.key-btn.p2').forEach(b => {
       b.classList.toggle('active-p2', b.dataset.key === key);
     });
-    if (key === currentMove || Math.random() < 0.2) p2Score++;
-    document.getElementById('p2Score').textContent = p2Score;
+    if (key === currentMove || Math.random() < 0.2) {
+      p2Score++;
+      document.getElementById('p2Score').textContent = p2Score;
+    }
     if (shuffleMode) p2.rot += 0.1;
     return;
   }
@@ -580,7 +589,7 @@ document.getElementById('btnShuffle').addEventListener('click', () => {
 document.getElementById('btnSpin').addEventListener('click', () => {
   spinSpeed = spinSpeed === 0 ? 0.02 : spinSpeed === 0.02 ? 0.05 : 0;
   document.getElementById('btnSpin').classList.toggle('active');
-  document.getElementById('btnSpin').textContent = spinSpeed ? `🔄 DREH ${spinSpeed*100}%` : '🔄 DREH';
+  document.getElementById('btnSpin').textContent = spinSpeed ? `🔄 DREH ${Math.round(spinSpeed*100)}%` : '🔄 DREH';
 });
 
 document.getElementById('btnProof').addEventListener('click', () => {
@@ -614,6 +623,7 @@ document.getElementById('btnProof').addEventListener('click', () => {
 document.getElementById('btnReset').addEventListener('click', () => {
   p1Score = 0; p2Score = 0; currentMove = '—';
   p1.pose = '5'; p2.pose = 'c';
+  p1.rot = 0; p2.rot = 0;
   spinAngle = 0; shuffleMode = false; spinSpeed = 0;
   document.getElementById('p1Score').textContent = '0';
   document.getElementById('p2Score').textContent = '0';
@@ -633,7 +643,7 @@ resizeCanvas();
 setTimeout(resizeCanvas, 200);
 update();
 
-console.log('💃 SHUFFLE · DREH · 2 SPIELER');
+console.log('💃 SHUFFLE · DREH · 2 SPIELER – KORRIGIERT');
 console.log('🔴 P1: 1-9 · 🔵 P2: QWEAZDYXC');
 console.log('🔀 SHUFFLE · 🔄 DREH');
 </script>
