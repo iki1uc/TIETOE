@@ -597,7 +597,7 @@ document.getElementById('btnStart').addEventListener('click', () => {
   running = !running;
   document.getElementById('btnStart').classList.toggle('active');
   document.getElementById('btnStart').textContent = running ? '▶ START' : '⏸ PAUSE';
-  if (running) update();
+  if (running) requestAnimationFrame(update);   // FIX 1
 });
 
 document.getElementById('btnAxiom').addEventListener('click', () => {
@@ -611,28 +611,30 @@ document.getElementById('btnMove').addEventListener('click', () => {
   currentMove = POSES[randomKey]?.label || '—';
   document.getElementById('moveDisplay').textContent = currentMove;
   document.getElementById('moveStatus').textContent = currentMove;
+  computeAxiom();                                 // FIX 2
+  document.getElementById('statusText').textContent = 'move';
 });
 
 document.getElementById('btnShuffle').addEventListener('click', () => {
   shuffleMode = !shuffleMode;
   document.getElementById('btnShuffle').classList.toggle('active');
   document.getElementById('btnShuffle').textContent = shuffleMode ? '🔀 SHUFFLE·ON' : '🔀 SHUFFLE';
+
+  // FIX 3 — Reset active classes
+  document.querySelectorAll('.key-btn').forEach(b => {
+    b.classList.remove('active-p1', 'active-p2');
+  });
 });
 
 document.getElementById('btnSpin').addEventListener('click', () => {
   spinSpeed = spinSpeed === 0 ? 0.02 : spinSpeed === 0.02 ? 0.05 : 0;
   document.getElementById('btnSpin').classList.toggle('active');
   document.getElementById('btnSpin').textContent = spinSpeed ? `🔄 DREH ${Math.round(spinSpeed*100)}%` : '🔄 DREH';
+
+  if (spinSpeed === 0) spinAngle = 0;             // FIX 4
+  document.getElementById('spinStatus').textContent = `${Math.round(spinAngle)}°`;
 });
 
-document.getElementById('btnProof').addEventListener('click', () => {
-  const proof = document.createElement('div');
-  proof.style.cssText = `
-    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 9999; backdrop-filter: blur(20px);
-    font-family: 'Consolas', monospace;
-  `;
   proof.innerHTML = `
     <div style="text-align:center; padding:40px; border:1px solid rgba(0,255,136,0.1); border-radius:20px; background:rgba(10,10,20,0.6); max-width:450px;">
       <div style="font-size:48px;">🌀</div>
