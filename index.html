@@ -162,7 +162,6 @@ body {
   letter-spacing: 1px;
 }
 
-/* NEU: AXIOM STATUS PANEL */
 .axiom-panel {
   margin-top: 10px;
   padding: 10px;
@@ -249,7 +248,6 @@ body {
   </div>
 </div>
 
-<!-- NEU: AXIOM STATUS -->
 <div class="axiom-panel">
   <div class="label">⚙️ VEC_CORE / PIPELINE_RUN8 · LIVE STATUS</div>
   <div class="axiom-row"><span>Irrealer Raum (Rot):</span><span class="val" id="axiomP1">50%</span></div>
@@ -303,8 +301,7 @@ let spinAngle = 0;
 let shuffleMode = false;
 let spinSpeed = 0;
 
-// Axiomatik Konstanten
-const PHI = (1 + Math.sqrt(5)) / 2; // 1.618
+const PHI = (1 + Math.sqrt(5)) / 2;
 
 function resizeCanvas() {
   const rect = canvas.parentElement.getBoundingClientRect();
@@ -313,7 +310,6 @@ function resizeCanvas() {
 }
 window.addEventListener('resize', resizeCanvas);
 
-// ===== POSEN (81 Achsen als Bewegungs-Code) =====
 const POSES = {
   '1': { armL: -0.6, armR: -0.4, legL: -0.3, legR: -0.1, body: 0, head: 0, label: 'Step L' },
   '2': { armL: -0.4, armR: -0.6, legL: -0.1, legR: -0.3, body: 0.05, head: 0.05, label: 'Step R' },
@@ -335,22 +331,14 @@ const POSES = {
   'c': { armL: 0, armR: 0, legL: 0, legR: 0, body: 0, head: 0, label: 'Center' }
 };
 
-// ===== TÄNZER (Irreal vs Real) =====
 let p1 = { x: 0.28, y: 0.55, pose: '5', color: '#ff4444', label: 'P1', rot: 0 };
 let p2 = { x: 0.72, y: 0.55, pose: 'c', color: '#00ccff', label: 'P2', rot: 0 };
 
-// ===== AXIOM COMPUTE (3er Dualität) =====
 function computeAxiom() {
-  // Künstliche Berechnung: P1 = Irreal (Rot), P2 = Real (Blau)
   const p1Real = p1Score / (p1Score + p2Score + 1);
   const p2Real = p2Score / (p1Score + p2Score + 1);
-  
-  // 3. Dualität (Move) = Kompromiss
   const avg = (p1Real + p2Real) / 2;
-  
-  // 180° Kuppel
   const kuppel = (Math.abs(avg - 0.5) * 2) * 0.375;
-  
   document.getElementById('axiomP1').textContent = Math.round(p1Real * 100) + "%";
   document.getElementById('axiomP2').textContent = Math.round(p2Real * 100) + "%";
   document.getElementById('axiomMove').textContent = currentMove;
@@ -358,10 +346,8 @@ function computeAxiom() {
   document.getElementById('axiomPhi').textContent = PHI.toFixed(3);
 }
 
-// ===== DRAW STICKMAN (Der Bessere überdeckt den Anderen) =====
 function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot, isWinner, isLoser) {
   const p = POSES[pose] || POSES['5'];
-  // FAME Mechanismus: Der Gewinner wird größer gezeichnet
   const fameScale = scale * (isWinner ? 1.4 : isLoser ? 0.8 : 1.0);
   const s = fameScale * 1.8;
 
@@ -370,7 +356,6 @@ function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot, isWinner
   ctx.rotate(rot + p.body * 0.2);
   ctx.globalAlpha = alpha || 1;
 
-  // FAME Glow
   if (isWinner) {
     ctx.shadowColor = color + 'aa';
     ctx.shadowBlur = 50;
@@ -429,7 +414,6 @@ function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot, isWinner
   ctx.restore();
 }
 
-// ===== RENDER =====
 function render() {
   const w = canvas.width, h = canvas.height;
   ctx.clearRect(0, 0, w, h);
@@ -482,11 +466,9 @@ function render() {
   ctx.fillText(`🔄 ${Math.round(spinAngle)}°`, w/2, 4);
 
   const scale = Math.min(w, h) * 0.075;
-
-  // FAME MECHANISM: Wer mehr Score hat, wird größer und überdeckt den anderen
   const p1x = w * p1.x, p1y = h * 0.7;
   const p2x = w * p2.x, p2y = h * 0.7;
-  
+
   const p1IsWinner = p1Score > p2Score;
   const p2IsWinner = p2Score > p1Score;
 
@@ -499,7 +481,6 @@ function render() {
   ctx.ellipse(p2x, h * 0.82, scale * 0.45, scale * 0.12, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Zeichne zuerst den "Verlierer" (hinten), dann den "Gewinner" (vorne)
   if (p1Score > p2Score) {
     drawStickman(ctx, p2x, p2y, p2.pose, p2.color, 'P2', scale, 1, p2.rot + spinAngle * 0.02, false, true);
     drawStickman(ctx, p1x, p1y, p1.pose, p1.color, 'P1', scale, 1, p1.rot + spinAngle * 0.02, true, false);
@@ -507,7 +488,6 @@ function render() {
     drawStickman(ctx, p1x, p1y, p1.pose, p1.color, 'P1', scale, 1, p1.rot + spinAngle * 0.02, false, true);
     drawStickman(ctx, p2x, p2y, p2.pose, p2.color, 'P2', scale, 1, p2.rot + spinAngle * 0.02, true, false);
   } else {
-    // Gleichstand: Normal zeichnen
     drawStickman(ctx, p1x, p1y, p1.pose, p1.color, 'P1', scale, 1, p1.rot + spinAngle * 0.02, false, false);
     drawStickman(ctx, p2x, p2y, p2.pose, p2.color, 'P2', scale, 1, p2.rot + spinAngle * 0.02, false, false);
   }
@@ -532,7 +512,7 @@ function render() {
   computeAxiom();
 }
 
-// ===== UPDATE =====
+// ─── UPDATE (korrigiert) ─────────────────────────────────────
 function update() {
   if (!running) return;
   time += 16;
@@ -615,17 +595,16 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// ===== BUTTONS =====
+// ===== BUTTONS (mit Loop-Repair) =====
 document.getElementById('btnStart').addEventListener('click', () => {
   running = !running;
   document.getElementById('btnStart').classList.toggle('active');
   document.getElementById('btnStart').textContent = running ? '⚡ NC ATTACK' : '⏸ PAUSE';
-  if (running) requestAnimationFrame(update);   // FIX 1
+  if (running) update();   // ← FIX: Loop neu starten
 });
 
 document.getElementById('btnAxiom').addEventListener('click', () => {
   computeAxiom();
-  document.getElementById('detailPanel')?.innerHTML = '🌀 AXIOM BEREIT';
 });
 
 document.getElementById('btnMove').addEventListener('click', () => {
@@ -634,7 +613,7 @@ document.getElementById('btnMove').addEventListener('click', () => {
   currentMove = POSES[randomKey]?.label || '—';
   document.getElementById('moveDisplay').textContent = currentMove;
   document.getElementById('moveStatus').textContent = currentMove;
-  computeAxiom();                                 // FIX 2
+  computeAxiom();
   document.getElementById('statusText').textContent = 'move';
 });
 
@@ -642,8 +621,6 @@ document.getElementById('btnShuffle').addEventListener('click', () => {
   shuffleMode = !shuffleMode;
   document.getElementById('btnShuffle').classList.toggle('active');
   document.getElementById('btnShuffle').textContent = shuffleMode ? '🔀 SHUFFLE·ON' : '🔀 SHUFFLE';
-
-  // FIX 3 — Reset active classes
   document.querySelectorAll('.key-btn').forEach(b => {
     b.classList.remove('active-p1', 'active-p2');
   });
@@ -653,8 +630,7 @@ document.getElementById('btnSpin').addEventListener('click', () => {
   spinSpeed = spinSpeed === 0 ? 0.02 : spinSpeed === 0.02 ? 0.05 : 0;
   document.getElementById('btnSpin').classList.toggle('active');
   document.getElementById('btnSpin').textContent = spinSpeed ? `🔄 DREH ${Math.round(spinSpeed*100)}%` : '🔄 DREH';
-
-  if (spinSpeed === 0) spinAngle = 0;             // FIX 4
+  if (spinSpeed === 0) spinAngle = 0;
   document.getElementById('spinStatus').textContent = `${Math.round(spinAngle)}°`;
 });
 
