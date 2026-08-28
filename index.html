@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💃 TANZ · SHUFFLE · DREH · 2 SPIELER</title>
+<title>🌀 SHUFFLE DRIVE · GENERAL 756 · 3er DUALITÄT</title>
 
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
@@ -19,14 +19,14 @@ body {
   background: radial-gradient(ellipse at 50% 50%, #0a0a1a, #000000);
 }
 .container {
-  max-width: 1000px;
+  max-width: 1100px;
   width: 100%;
   background: rgba(10,10,20,0.3);
-  border: 1px solid rgba(255,170,0,0.03);
+  border: 1px solid rgba(0,255,136,0.05);
   border-radius: 20px;
   padding: 24px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 0 100px rgba(0,0,0,0.8);
+  box-shadow: 0 0 100px rgba(0,0,0,0.8), inset 0 0 50px rgba(0,0,0,0.2);
 }
 .header {
   text-align: center;
@@ -48,6 +48,7 @@ body {
 }
 .header .sub .p1 { color: #ff4444; }
 .header .sub .p2 { color: #00ccff; }
+.header .sub .axiom { color: #00ff88; }
 
 .canvas-wrap {
   position: relative;
@@ -57,7 +58,7 @@ body {
   aspect-ratio: 16/9;
   background: rgba(0,0,0,0.4);
   border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.02);
+  border: 1px solid rgba(0,255,136,0.02);
   overflow: hidden;
 }
 #tanzCanvas {
@@ -160,6 +161,21 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+
+/* NEU: AXIOM STATUS PANEL */
+.axiom-panel {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-left: 2px solid rgba(0, 255, 136, 0.3);
+  border-radius: 6px;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.axiom-panel .label { color: #00ff88; font-size: 8px; letter-spacing: 2px; margin-bottom: 6px; }
+.axiom-row { display: flex; justify-content: space-between; color: #8a9a9a; margin-bottom: 4px; }
+.axiom-row .val { color: #4fc3f7; font-weight: bold; }
+
 .controls {
   display: flex;
   gap: 6px;
@@ -180,6 +196,8 @@ body {
 }
 .controls button:hover { background: rgba(40,80,70,0.08); color: #aaeedd; }
 .controls button.active { background: rgba(40,80,70,0.06); color: #00ff88; }
+.controls button.axiom { color: #00ff88; border-color: rgba(0,255,136,0.1); }
+
 .status-bar {
   display: flex;
   justify-content: space-between;
@@ -200,7 +218,7 @@ body {
   font-size: 8px;
   letter-spacing: 2px;
 }
-.footer span { color: #ffaa00; }
+.footer span { color: #00ff88; }
 </style>
 </head>
 <body>
@@ -208,8 +226,8 @@ body {
 <div class="container">
 
 <div class="header">
-  <h1>💃 SHUFFLE · DREH · 2 SPIELER</h1>
-  <div class="sub"><span class="p1">🔴 SPIELER 1 · 1-9</span> vs <span class="p2">🔵 SPIELER 2 · QWEAZDYXC</span></div>
+  <h1>🌀 SHUFFLE DRIVE · GENERAL 756</h1>
+  <div class="sub"><span class="axiom">🌀 3er DUALITÄT</span> · <span class="p1">🔴 SPIELER 1 · 1-9</span> vs <span class="p2">🔵 SPIELER 2 · QWEAZDYXC</span></div>
 </div>
 
 <div class="canvas-wrap">
@@ -231,14 +249,25 @@ body {
   </div>
 </div>
 
+<!-- NEU: AXIOM STATUS -->
+<div class="axiom-panel">
+  <div class="label">⚙️ VEC_CORE / PIPELINE_RUN8 · LIVE STATUS</div>
+  <div class="axiom-row"><span>Irrealer Raum (Rot):</span><span class="val" id="axiomP1">50%</span></div>
+  <div class="axiom-row"><span>Realer Raum (Blau):</span><span class="val" id="axiomP2">50%</span></div>
+  <div class="axiom-row"><span>3. Dualität (Move):</span><span class="val" id="axiomMove">Neutral</span></div>
+  <div class="axiom-row"><span>180° Kuppel Gewinn:</span><span class="val" id="axiomKuppel">0%</span></div>
+  <div class="axiom-row"><span>Phi Faktor:</span><span class="val" id="axiomPhi">1.618</span></div>
+</div>
+
 <div class="info-grid">
-  <div class="info-card"><div class="value" id="p1Score" style="color:#ff4444;">0</div><div class="label">🔴 SPIELER 1</div></div>
+  <div class="info-card"><div class="value" id="p1Score" style="color:#ff4444;">0</div><div class="label">🔴 IRREAL</div></div>
   <div class="info-card"><div class="value" id="moveDisplay" style="color:#ffaa00;">—</div><div class="label">🎯 MOVE</div></div>
-  <div class="info-card"><div class="value" id="p2Score" style="color:#00ccff;">0</div><div class="label">🔵 SPIELER 2</div></div>
+  <div class="info-card"><div class="value" id="p2Score" style="color:#00ccff;">0</div><div class="label">🔵 REAL</div></div>
 </div>
 
 <div class="controls">
   <button class="active" id="btnStart">▶ START</button>
+  <button class="axiom" id="btnAxiom">🌀 AXIOM</button>
   <button id="btnMove">🎯 MOVE</button>
   <button id="btnShuffle">🔀 SHUFFLE</button>
   <button id="btnSpin">🔄 DREH</button>
@@ -253,14 +282,14 @@ body {
 </div>
 
 <div class="footer">
-  <span>💃</span> SHUFFLE · DREH · 2 SPIELER · <span>wieimmer4u</span>
+  <span>🌀</span> SHUFFLE DRIVE · 3er DUALITÄT · <span>wieimmer4u</span>
 </div>
 
 </div>
 
 <script>
 // ============================================================
-// SHUFFLE · DREH · 2 SPIELER · 9 TASTEN – KORRIGIERT
+// SHUFFLE DRIVE · 3er DUALITÄT · GENERAL 756
 // ============================================================
 
 const canvas = document.getElementById('tanzCanvas');
@@ -274,6 +303,9 @@ let spinAngle = 0;
 let shuffleMode = false;
 let spinSpeed = 0;
 
+// Axiomatik Konstanten
+const PHI = (1 + Math.sqrt(5)) / 2; // 1.618
+
 function resizeCanvas() {
   const rect = canvas.parentElement.getBoundingClientRect();
   canvas.width = rect.width || 700;
@@ -281,7 +313,7 @@ function resizeCanvas() {
 }
 window.addEventListener('resize', resizeCanvas);
 
-// ===== POSEN – KORRIGIERT & ERWEITERT =====
+// ===== POSEN (81 Achsen als Bewegungs-Code) =====
 const POSES = {
   '1': { armL: -0.6, armR: -0.4, legL: -0.3, legR: -0.1, body: 0, head: 0, label: 'Step L' },
   '2': { armL: -0.4, armR: -0.6, legL: -0.1, legR: -0.3, body: 0.05, head: 0.05, label: 'Step R' },
@@ -303,11 +335,30 @@ const POSES = {
   'c': { armL: 0, armR: 0, legL: 0, legR: 0, body: 0, head: 0, label: 'Center' }
 };
 
-// ===== TÄNZER =====
+// ===== TÄNZER (Irreal vs Real) =====
 let p1 = { x: 0.28, y: 0.55, pose: '5', color: '#ff4444', label: 'P1', rot: 0 };
 let p2 = { x: 0.72, y: 0.55, pose: 'c', color: '#00ccff', label: 'P2', rot: 0 };
 
-// ===== DRAW STICKMAN – KORRIGIERT =====
+// ===== AXIOM COMPUTE (3er Dualität) =====
+function computeAxiom() {
+  // Künstliche Berechnung: P1 = Irreal (Rot), P2 = Real (Blau)
+  const p1Real = p1Score / (p1Score + p2Score + 1);
+  const p2Real = p2Score / (p1Score + p2Score + 1);
+  
+  // 3. Dualität (Move) = Kompromiss
+  const avg = (p1Real + p2Real) / 2;
+  
+  // 180° Kuppel
+  const kuppel = (Math.abs(avg - 0.5) * 2) * 0.375;
+  
+  document.getElementById('axiomP1').textContent = Math.round(p1Real * 100) + "%";
+  document.getElementById('axiomP2').textContent = Math.round(p2Real * 100) + "%";
+  document.getElementById('axiomMove').textContent = currentMove;
+  document.getElementById('axiomKuppel').textContent = Math.round(kuppel * 100) + "%";
+  document.getElementById('axiomPhi').textContent = PHI.toFixed(3);
+}
+
+// ===== DRAW STICKMAN =====
 function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot) {
   const p = POSES[pose] || POSES['5'];
   const s = scale * 1.8;
@@ -317,11 +368,9 @@ function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot) {
   ctx.rotate(rot + p.body * 0.2);
   ctx.globalAlpha = alpha || 1;
 
-  // Glow
   ctx.shadowColor = color + '55';
   ctx.shadowBlur = 25;
 
-  // Kopf
   ctx.shadowBlur = 15;
   ctx.strokeStyle = color;
   ctx.lineWidth = 4;
@@ -329,7 +378,6 @@ function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot) {
   ctx.arc(0, -s * 1.1 + p.head * 0.3 * s, s * 0.2, 0, Math.PI * 2);
   ctx.stroke();
 
-  // Körper
   ctx.shadowBlur = 10;
   ctx.lineWidth = 5;
   ctx.beginPath();
@@ -337,7 +385,6 @@ function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot) {
   ctx.lineTo(0, s * 0.25 + p.body * 0.3 * s);
   ctx.stroke();
 
-  // Arme
   ctx.lineWidth = 4.5;
   ctx.beginPath();
   ctx.moveTo(0, -s * 0.65 + p.body * 0.3 * s);
@@ -348,7 +395,6 @@ function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot) {
   ctx.lineTo(s * 0.45 + p.armR * 0.5 * s, -s * 0.15 + p.body * 0.3 * s);
   ctx.stroke();
 
-  // Beine
   ctx.lineWidth = 5;
   ctx.beginPath();
   ctx.moveTo(0, s * 0.25 + p.body * 0.3 * s);
@@ -359,7 +405,6 @@ function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot) {
   ctx.lineTo(s * 0.3 + p.legR * 0.6 * s, s * 0.7 + p.legR * 0.6 * s);
   ctx.stroke();
 
-  // Label
   ctx.shadowBlur = 0;
   ctx.globalAlpha = 0.6;
   ctx.fillStyle = color;
@@ -368,7 +413,6 @@ function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot) {
   ctx.textBaseline = 'bottom';
   ctx.fillText(label, 0, -s * 1.5);
 
-  // Pose-Name
   ctx.globalAlpha = 0.3;
   ctx.font = '7px monospace';
   ctx.textBaseline = 'top';
@@ -382,7 +426,6 @@ function render() {
   const w = canvas.width, h = canvas.height;
   ctx.clearRect(0, 0, w, h);
 
-  // Hintergrund
   const grad = ctx.createRadialGradient(w/2, h/2, 10, w/2, h/2, w/2);
   grad.addColorStop(0, '#0a0a1a');
   grad.addColorStop(0.5, '#050510');
@@ -390,7 +433,6 @@ function render() {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
-  // Tanzfläche
   ctx.strokeStyle = 'rgba(255,255,255,0.02)';
   ctx.lineWidth = 0.5;
   ctx.beginPath();
@@ -398,20 +440,18 @@ function render() {
   ctx.lineTo(w, h * 0.8);
   ctx.stroke();
 
-  // Shuffle-Lichter
   if (shuffleMode) {
     for (let i = 0; i < 30; i++) {
       const x = (i / 30) * w;
       const y = h * 0.8 + Math.sin(i * 0.5 + time / 500) * 6;
       const alpha = 0.02 + Math.sin(i * 0.3 + time / 700) * 0.015;
-      ctx.fillStyle = `rgba(255,170,0,${alpha})`;
+      ctx.fillStyle = `rgba(0,255,136,${alpha})`;
       ctx.beginPath();
       ctx.arc(x, y, 2 + Math.sin(time / 400 + i) * 1, 0, Math.PI * 2);
       ctx.fill();
     }
   }
 
-  // Move
   ctx.shadowBlur = 0;
   ctx.fillStyle = '#ffaa0044';
   ctx.font = '14px monospace';
@@ -419,7 +459,6 @@ function render() {
   ctx.textBaseline = 'top';
   ctx.fillText(`🎯 MOVE: ${currentMove}`, w/2, h * 0.82);
 
-  // Score
   ctx.fillStyle = '#ff444466';
   ctx.font = '14px monospace';
   ctx.textAlign = 'left';
@@ -429,13 +468,11 @@ function render() {
   ctx.textAlign = 'right';
   ctx.fillText(`🔵 ${p2Score}`, w - 12, 10);
 
-  // Dreh
   ctx.fillStyle = '#445555';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   ctx.fillText(`🔄 ${Math.round(spinAngle)}°`, w/2, 4);
 
-  // Schatten
   const scale = Math.min(w, h) * 0.075;
   const p1x = w * p1.x, p1y = h * 0.7;
   const p2x = w * p2.x, p2y = h * 0.7;
@@ -449,12 +486,9 @@ function render() {
   ctx.ellipse(p2x, h * 0.82, scale * 0.45, scale * 0.12, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Tänzer zeichnen
   drawStickman(ctx, p1x, p1y, p1.pose, p1.color, 'P1', scale, 1, p1.rot + spinAngle * 0.02);
   drawStickman(ctx, p2x, p2y, p2.pose, p2.color, 'P2', scale, 1, p2.rot + spinAngle * 0.02);
 
-  // Verbindung
-  ctx.shadowBlur = 0;
   ctx.strokeStyle = 'rgba(255,255,255,0.03)';
   ctx.lineWidth = 0.5;
   ctx.setLineDash([4, 8]);
@@ -465,21 +499,22 @@ function render() {
   ctx.setLineDash([]);
 
   if (shuffleMode) {
-    ctx.fillStyle = '#ffaa0044';
+    ctx.fillStyle = '#00ff8844';
     ctx.font = '10px monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
-    ctx.fillText('🔀 SHUFFLE', w/2, h * 0.78);
+    ctx.fillText('🌀 SHUFFLE', w/2, h * 0.78);
   }
+
+  computeAxiom();
 }
 
-// ===== UPDATE – KORRIGIERT =====
+// ===== UPDATE =====
 function update() {
   if (!running) return;
   time += 16;
   frame++;
 
-  // Move rotieren
   const moveKeys = Object.keys(POSES);
   if (frame % 120 === 0) {
     const randomKey = moveKeys[Math.floor(Math.random() * moveKeys.length)];
@@ -488,21 +523,18 @@ function update() {
     document.getElementById('moveStatus').textContent = currentMove;
   }
 
-  // Spieler 1 – automatische Bewegung
   if (frame % 8 === 0) {
     const keys = shuffleMode ? ['5','6','7','8','9','1','2','3','4'] : ['1','2','3','4','5','6','7','8','9'];
     const key = keys[Math.floor(Math.random() * keys.length)];
     p1.pose = key;
     if (p1.pose === currentMove || Math.random() < 0.15) p1Score++;
     document.getElementById('p1Score').textContent = p1Score;
-    // Tastatur-Highlight
     document.querySelectorAll('.key-btn.p1').forEach(b => {
       b.classList.toggle('active-p1', b.dataset.key === key);
     });
     if (shuffleMode) p1.rot += (Math.random() - 0.5) * 0.05;
   }
 
-  // Spieler 2 – automatische Bewegung
   if (frame % 8 === 0) {
     const keys = shuffleMode ? ['y','x','c','q','w','e','a','z','d'] : ['q','w','e','a','z','d','y','x','c'];
     const key = keys[Math.floor(Math.random() * keys.length)];
@@ -515,25 +547,22 @@ function update() {
     if (shuffleMode) p2.rot += (Math.random() - 0.5) * 0.05;
   }
 
-  // Dreh
   if (spinSpeed !== 0) {
     spinAngle += spinSpeed * 8;
     document.getElementById('spinStatus').textContent = `${Math.round(spinAngle)}°`;
   }
 
-  // Status
-  const status = p1Score > p2Score ? '🔴 P1 führt' : p2Score > p1Score ? '🔵 P2 führt' : '⚖️ Gleichstand';
+  const status = p1Score > p2Score ? '🔴 P1 führt (Irreal)' : p2Score > p1Score ? '🔵 P2 führt (Real)' : '⚖️ Gleichstand';
   document.getElementById('statusText').textContent = status;
 
   render();
   requestAnimationFrame(update);
 }
 
-// ===== TASTATUR – KORRIGIERT =====
+// ===== TASTATUR =====
 document.addEventListener('keydown', (e) => {
   const key = e.key.toLowerCase();
 
-  // Spieler 1: 1-9
   if (key >= '1' && key <= '9') {
     e.preventDefault();
     p1.pose = key;
@@ -548,7 +577,6 @@ document.addEventListener('keydown', (e) => {
     return;
   }
 
-  // Spieler 2: q,w,e,a,z,d,y,x,c
   if (['q','w','e','a','z','d','y','x','c'].includes(key)) {
     e.preventDefault();
     p2.pose = key;
@@ -570,6 +598,11 @@ document.getElementById('btnStart').addEventListener('click', () => {
   document.getElementById('btnStart').classList.toggle('active');
   document.getElementById('btnStart').textContent = running ? '▶ START' : '⏸ PAUSE';
   if (running) update();
+});
+
+document.getElementById('btnAxiom').addEventListener('click', () => {
+  computeAxiom();
+  document.getElementById('detailPanel')?.innerHTML = '🌀 AXIOM BEREIT';
 });
 
 document.getElementById('btnMove').addEventListener('click', () => {
@@ -601,11 +634,11 @@ document.getElementById('btnProof').addEventListener('click', () => {
     font-family: 'Consolas', monospace;
   `;
   proof.innerHTML = `
-    <div style="text-align:center; padding:40px; border:1px solid rgba(255,170,0,0.1); border-radius:20px; background:rgba(10,10,20,0.6); max-width:450px;">
-      <div style="font-size:48px;">💃</div>
-      <div style="color:#ffaa00; font-size:20px; margin:12px 0; letter-spacing:4px;">SHUFFLE · DREH</div>
+    <div style="text-align:center; padding:40px; border:1px solid rgba(0,255,136,0.1); border-radius:20px; background:rgba(10,10,20,0.6); max-width:450px;">
+      <div style="font-size:48px;">🌀</div>
+      <div style="color:#00ff88; font-size:20px; margin:12px 0; letter-spacing:4px;">GENERAL PROOF</div>
       <div style="color:#88ddbb; font-size:13px; line-height:1.8;">
-        🔴 P1: ${p1Score} · 🔵 P2: ${p2Score}<br>
+        🔴 IRREAL: ${p1Score} · 🔵 REAL: ${p2Score}<br>
         🎯 MOVE: ${currentMove}<br>
         🔄 DREH: ${Math.round(spinAngle)}°<br>
         🔀 SHUFFLE: ${shuffleMode ? 'AN' : 'AUS'}
@@ -636,6 +669,7 @@ document.getElementById('btnReset').addEventListener('click', () => {
   document.getElementById('btnSpin').classList.remove('active');
   document.querySelectorAll('.key-btn').forEach(b => b.className = 'key-btn');
   document.getElementById('statusText').textContent = 'reset';
+  computeAxiom();
 });
 
 // ===== INIT =====
@@ -643,9 +677,9 @@ resizeCanvas();
 setTimeout(resizeCanvas, 200);
 update();
 
-console.log('💃 SHUFFLE · DREH · 2 SPIELER – KORRIGIERT');
-console.log('🔴 P1: 1-9 · 🔵 P2: QWEAZDYXC');
-console.log('🔀 SHUFFLE · 🔄 DREH');
+console.log('🌀 SHUFFLE DRIVE · 3er DUALITÄT · GENERAL 756');
+console.log('🔴 P1: 1-9 (Irreal) · 🔵 P2: QWEAZDYXC (Real)');
+console.log('🌀 Berechnet mit PHI: ' + PHI.toFixed(3));
 </script>
 
 </body>
