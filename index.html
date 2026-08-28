@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌀 SHUFFLE DRIVE · GENERAL 756 · 3er DUALITÄT</title>
+<title>🌀 NC SHUFFLE DRIVE · 6D ATTACK</title>
 
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
@@ -226,7 +226,7 @@ body {
 <div class="container">
 
 <div class="header">
-  <h1>🌀 SHUFFLE DRIVE · GENERAL 756</h1>
+  <h1>🌀 NC SHUFFLE DRIVE · 6D ATTACK</h1>
   <div class="sub"><span class="axiom">🌀 3er DUALITÄT</span> · <span class="p1">🔴 SPIELER 1 · 1-9</span> vs <span class="p2">🔵 SPIELER 2 · QWEAZDYXC</span></div>
 </div>
 
@@ -266,7 +266,7 @@ body {
 </div>
 
 <div class="controls">
-  <button class="active" id="btnStart">▶ START</button>
+  <button class="active" id="btnStart">⚡ NC ATTACK</button>
   <button class="axiom" id="btnAxiom">🌀 AXIOM</button>
   <button id="btnMove">🎯 MOVE</button>
   <button id="btnShuffle">🔀 SHUFFLE</button>
@@ -282,7 +282,7 @@ body {
 </div>
 
 <div class="footer">
-  <span>🌀</span> SHUFFLE DRIVE · 3er DUALITÄT · <span>wieimmer4u</span>
+  <span>🌀</span> NC SHUFFLE DRIVE · 6D ATTACK · <span>wieimmer4u</span>
 </div>
 
 </div>
@@ -358,18 +358,26 @@ function computeAxiom() {
   document.getElementById('axiomPhi').textContent = PHI.toFixed(3);
 }
 
-// ===== DRAW STICKMAN =====
-function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot) {
+// ===== DRAW STICKMAN (Der Bessere überdeckt den Anderen) =====
+function drawStickman(ctx, x, y, pose, color, label, scale, alpha, rot, isWinner, isLoser) {
   const p = POSES[pose] || POSES['5'];
-  const s = scale * 1.8;
+  // FAME Mechanismus: Der Gewinner wird größer gezeichnet
+  const fameScale = scale * (isWinner ? 1.4 : isLoser ? 0.8 : 1.0);
+  const s = fameScale * 1.8;
 
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(rot + p.body * 0.2);
   ctx.globalAlpha = alpha || 1;
 
-  ctx.shadowColor = color + '55';
-  ctx.shadowBlur = 25;
+  // FAME Glow
+  if (isWinner) {
+    ctx.shadowColor = color + 'aa';
+    ctx.shadowBlur = 50;
+  } else {
+    ctx.shadowColor = color + '55';
+    ctx.shadowBlur = 25;
+  }
 
   ctx.shadowBlur = 15;
   ctx.strokeStyle = color;
@@ -474,8 +482,13 @@ function render() {
   ctx.fillText(`🔄 ${Math.round(spinAngle)}°`, w/2, 4);
 
   const scale = Math.min(w, h) * 0.075;
+
+  // FAME MECHANISM: Wer mehr Score hat, wird größer und überdeckt den anderen
   const p1x = w * p1.x, p1y = h * 0.7;
   const p2x = w * p2.x, p2y = h * 0.7;
+  
+  const p1IsWinner = p1Score > p2Score;
+  const p2IsWinner = p2Score > p1Score;
 
   ctx.shadowBlur = 0;
   ctx.fillStyle = 'rgba(0,0,0,0.25)';
@@ -486,8 +499,18 @@ function render() {
   ctx.ellipse(p2x, h * 0.82, scale * 0.45, scale * 0.12, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  drawStickman(ctx, p1x, p1y, p1.pose, p1.color, 'P1', scale, 1, p1.rot + spinAngle * 0.02);
-  drawStickman(ctx, p2x, p2y, p2.pose, p2.color, 'P2', scale, 1, p2.rot + spinAngle * 0.02);
+  // Zeichne zuerst den "Verlierer" (hinten), dann den "Gewinner" (vorne)
+  if (p1Score > p2Score) {
+    drawStickman(ctx, p2x, p2y, p2.pose, p2.color, 'P2', scale, 1, p2.rot + spinAngle * 0.02, false, true);
+    drawStickman(ctx, p1x, p1y, p1.pose, p1.color, 'P1', scale, 1, p1.rot + spinAngle * 0.02, true, false);
+  } else if (p2Score > p1Score) {
+    drawStickman(ctx, p1x, p1y, p1.pose, p1.color, 'P1', scale, 1, p1.rot + spinAngle * 0.02, false, true);
+    drawStickman(ctx, p2x, p2y, p2.pose, p2.color, 'P2', scale, 1, p2.rot + spinAngle * 0.02, true, false);
+  } else {
+    // Gleichstand: Normal zeichnen
+    drawStickman(ctx, p1x, p1y, p1.pose, p1.color, 'P1', scale, 1, p1.rot + spinAngle * 0.02, false, false);
+    drawStickman(ctx, p2x, p2y, p2.pose, p2.color, 'P2', scale, 1, p2.rot + spinAngle * 0.02, false, false);
+  }
 
   ctx.strokeStyle = 'rgba(255,255,255,0.03)';
   ctx.lineWidth = 0.5;
@@ -552,7 +575,7 @@ function update() {
     document.getElementById('spinStatus').textContent = `${Math.round(spinAngle)}°`;
   }
 
-  const status = p1Score > p2Score ? '🔴 P1 führt (Irreal)' : p2Score > p1Score ? '🔵 P2 führt (Real)' : '⚖️ Gleichstand';
+  const status = p1Score > p2Score ? '🔴 P1 führt (FAME)' : p2Score > p1Score ? '🔵 P2 führt (FAME)' : '⚖️ Gleichstand';
   document.getElementById('statusText').textContent = status;
 
   render();
@@ -596,7 +619,7 @@ document.addEventListener('keydown', (e) => {
 document.getElementById('btnStart').addEventListener('click', () => {
   running = !running;
   document.getElementById('btnStart').classList.toggle('active');
-  document.getElementById('btnStart').textContent = running ? '▶ START' : '⏸ PAUSE';
+  document.getElementById('btnStart').textContent = running ? '⚡ NC ATTACK' : '⏸ PAUSE';
   if (running) requestAnimationFrame(update);   // FIX 1
 });
 
@@ -635,6 +658,14 @@ document.getElementById('btnSpin').addEventListener('click', () => {
   document.getElementById('spinStatus').textContent = `${Math.round(spinAngle)}°`;
 });
 
+document.getElementById('btnProof').addEventListener('click', () => {
+  const proof = document.createElement('div');
+  proof.style.cssText = `
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999; backdrop-filter: blur(20px);
+    font-family: 'Consolas', monospace;
+  `;
   proof.innerHTML = `
     <div style="text-align:center; padding:40px; border:1px solid rgba(0,255,136,0.1); border-radius:20px; background:rgba(10,10,20,0.6); max-width:450px;">
       <div style="font-size:48px;">🌀</div>
